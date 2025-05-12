@@ -1,18 +1,18 @@
 #!/usr/bin/env node
 
 import { Command } from "commander";
-import { generatePaths } from "./generatePaths";
+import { generatePaths } from "./generatePaths.js";
 import path from "path";
 import { existsSync } from "fs";
 
 const program = new Command();
 
 program
-  .name("next-paths")
+  .name("nextjs-paths")
   .description(
     "Generate strongly typed path utilities from your Next.js App Router"
   )
-  .version("1.0.0");
+  .version("1.0.1");
 
 program
   .command("generate")
@@ -36,6 +36,10 @@ program
       : path.join(process.cwd(), "src", "app");
 
     console.log("Target app directory:", appDir);
+    console.log(
+      "Will generate paths.ts in:",
+      path.join(process.cwd(), options.outputDir ?? appDir)
+    );
 
     if (!existsSync(appDir)) {
       console.error(`Error: App directory does not exist: ${appDir}`);

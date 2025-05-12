@@ -1,19 +1,19 @@
 {
-  "name": "next-paths",
-  "version": "1.0.0",
+  "name": "nextjs-paths",
+  "version": "1.0.7",
   "description": "Generate path helpers for Next.js App Router",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "next-paths": "./dist/cli.js"
+    "nextjs-paths": "./dist/cli.js"
   },
   "scripts": {
-    "build": "npm run clean && yarn generate:test && tsc",
+    "build": "npm run clean && yarn generate:test && tsc && chmod +x dist/cli.js",
     "prebuild": "npm run clean",
     "pretest": "yarn build",
     "test": "jest",
     "prepare": "npm run build",
-    "generate": "node dist/generatePaths.js",
+    "generate": "node dist/index.js",
     "clean": "rm -rf dist",
     "prepublishOnly": "npm run clean && npm run build",
     "generate:test": "tsx src/cli.ts generate --appDir tests/fixtures/app --outputDir tests/fixtures/app"
@@ -28,7 +28,7 @@
     "next.js",
     "app-directory"
   ],
-  "author": "",
+  "author": "luap2703",
   "license": "MIT",
   "dependencies": {
     "commander": "^11.0.0",
@@ -55,25 +55,28 @@
   "files": [
     "dist/index.js",
     "dist/index.d.ts",
+    "dist/cli.js",
+    "dist/cli.d.ts",
     "dist/generatePaths.js",
     "dist/generatePaths.d.ts",
-    "dist/cli.js",
+    "dist/paths.js",
+    "dist/paths.d.ts",
     "README.md",
     "LICENSE"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/paulostarek/next-paths.git"
+    "url": "git+https://github.com/luap2703/nextjs-paths.git"
   },
   "bugs": {
-    "url": "https://github.com/paulostarek/next-paths/issues"
+    "url": "https://github.com/luap2703/nextjs-paths/issues"
   },
-  "homepage": "https://github.com/paulostarek/next-paths#readme",
-  "packageManager": "yarn@1.22.21+sha1.1959a18351b811cdeedbd484a8f86c3cc3bbaf72",
+  "homepage": "https://github.com/luap2703/nextjs-paths#readme",
   "engines": {
     "node": ">=18.0.0"
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "packageManager": "yarn@1.22.21+sha1.1959a18351b811cdeedbd484a8f86c3cc3bbaf72"
 }
