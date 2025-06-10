@@ -1,6 +1,6 @@
 {
   "name": "nextjs-paths",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Generate path helpers for Next.js App Router",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -8,15 +8,16 @@
     "nextjs-paths": "./dist/cli.js"
   },
   "scripts": {
-    "build": "npm run clean && yarn generate:test && tsc && chmod +x dist/cli.js",
-    "prebuild": "npm run clean",
+    "build": "tsc && chmod +x dist/cli.js",
+    "prebuild": "yarn run clean && yarn run generate:test",
     "pretest": "yarn build",
     "test": "jest",
-    "prepare": "npm run build",
-    "generate": "node dist/index.js",
+    "prepare": "yarn build",
+    "generate": "tsx src/cli.js -h generate",
     "clean": "rm -rf dist",
-    "prepublishOnly": "npm run clean && npm run build",
-    "generate:test": "tsx src/cli.ts generate --appDir tests/fixtures/app --outputDir tests/fixtures/app"
+    "prepublishOnly": "yarn clean && yarn build",
+    "generate:test": "tsx src/cli.ts generate --appDir tests/fixtures/app --outputDir tests/fixtures/app",
+    "help": "node dist/cli.js --options --help"
   },
   "keywords": [
     "nextjs",

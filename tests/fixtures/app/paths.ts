@@ -18,9 +18,21 @@ export const paths = {
             POST: make(slug ? "" + "/blog" + ("/" + slug) : "" + "/blog"),
             PUT: make(slug ? "" + "/blog" + ("/" + slug) : "" + "/blog"),
             blogComponentId: (blogComponentId: string) => ({
-                ...make((slug ? "" + "/blog" + ("/" + slug) : "" + "/blog") + ("/" + blogComponentId))
+                ...make((slug ? "" + "/blog" + ("/" + slug) : "" + "/blog") + ("/" + blogComponentId)),
+                testFolder: {
+                    ...make((slug ? "" + "/blog" + ("/" + slug) : "" + "/blog") + ("/" + blogComponentId) + "/test-folder")
+                }
             })
         })
+    },
+    adminDashboard: {
+        ...make("" + "/admin-dashboard")
+    },
+    blogPost: {
+        ...make("" + "/blog-post")
+    },
+    userProfile: {
+        ...make("" + "/user-profile")
     },
     userSettings: {
         ...make("" + "/userSettings")

@@ -28,27 +28,35 @@ const f = ts.factory;
 // Public API
 // ---------------------------------------------------------------------------
 
-export type CaseStyle = "camel" | "snake";
+export type CaseStyle =
+  | "camelCase"
+  | "lowerSnake"
+  | "upperSnake"
+  | "pascalCase";
 
 export interface GeneratePathsOptions {
   appDir?: string; // default: <cwd>/src/app
   envKey?: string; // default: NEXT_PUBLIC_APP_BASE_URL
-  style?: CaseStyle; // camel (default) | snake
-  outputDir?: string; // default: <appDir>/paths.ts
+  caseStyle?: CaseStyle; // camelCase (default) | lowerSnake | upperSnake | pascalCase
+  outputDir?: string; // default: <appDir>
+  fileName?: string; // default: paths.ts
 }
 
 export function generatePaths(options: GeneratePathsOptions = {}): void {
-  const style: CaseStyle = options.style ?? "camel";
+  const caseStyle: CaseStyle = options.caseStyle ?? "camelCase";
   const appDir = options.appDir
     ? path.resolve(options.appDir)
     : path.join(process.cwd(), "src", "app");
   const envKey = options.envKey ?? "NEXT_PUBLIC_APP_BASE_URL";
-  const outFile = path.join(options.outputDir ?? appDir, "paths.ts");
+  const fileName = options.fileName?.endsWith(".ts")
+    ? options.fileName
+    : "paths.ts";
+  const outFile = path.join(options.outputDir ?? appDir, fileName);
 
-  const rawSegments = scanDir(appDir, style);
+  const rawSegments = scanDir(appDir, caseStyle);
   const tree = mergeSegments(rawSegments);
 
-  const source = buildSourceFile(tree, envKey, style);
+  const source = buildSourceFile(tree, envKey, caseStyle);
   const code = ts
     .createPrinter({ newLine: ts.NewLineKind.LineFeed })
     .printFile(source);
@@ -81,6 +89,18 @@ const METHODS = [
   "HEAD",
   "OPTIONS",
 ] as const;
+
+type HTTPMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+
+interface Route {
+  name: string;
+  path: string;
+  isDynamic?: boolean;
+  isCatchAll?: boolean;
+  paramName?: string;
+  methods?: HTTPMethod[];
+  children?: Route[];
+}
 
 // ---------------------------------------------------------------------------
 // Filesystem traversal → raw segments
@@ -322,7 +342,7 @@ function buildSourceFile(
   }
 
   function buildDynamic(seg: Segment, base: ts.Expression): ts.ArrowFunction {
-    const argName = toCase(seg.dynamic!.param, "camel");
+    const argName = toCase(seg.dynamic!.param, style);
     const argId = id(argName);
     const nextBase = seg.dynamic!.optional
       ? f.createConditionalExpression(
@@ -365,21 +385,45 @@ function buildSourceFile(
 // Utilities
 // -----------------------------------------------------------------------------
 
-function toCase(str: string, cs: CaseStyle): string {
-  if (cs === "snake") {
-    return str
-      .replace(/([A-Z])/g, "_$1")
-      .replace(/[-\s]+/g, "_")
-      .replace(/__+/g, "_")
-      .replace(/^_/, "")
-      .toLowerCase()
-      .replace(/\[\[\.\.\.([^\]]+)\]\]/, "$1") // Handle optional catch-all
-      .replace(/\[\.\.\.([^\]]+)\]/, "$1") // Handle catch-all
-      .replace(/\[\[([^\]]+)\]\]/, "$1") // Handle optional dynamic
-      .replace(/\[([^\]]+)\]/, "$1"); // Handle dynamic
+function toCase(str: string, caseStyle: CaseStyle): string {
+  // First, clean up the string by removing any non-alphanumeric characters
+  // and splitting by hyphens, underscores, or camelCase boundaries
+  const words = str
+    .replace(/[^a-zA-Z0-9]/g, "-")
+    // Split by hyphens and underscores
+    .split(/[-_]/)
+    // Split camelCase boundaries
+    .flatMap((word) =>
+      word
+        // Insert space before capital letters
+        .replace(/([A-Z])/g, " $1")
+        // Split by spaces
+        .split(" ")
+        // Filter out empty strings
+        .filter(Boolean)
+    )
+    .filter(Boolean);
+
+  switch (caseStyle) {
+    case "camelCase":
+      return words
+        .map((word, index) =>
+          index === 0
+            ? word.toLowerCase()
+            : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+        )
+        .join("");
+    case "lowerSnake":
+      return words.map((word) => word.toLowerCase()).join("_");
+    case "upperSnake":
+      return words.map((word) => word.toUpperCase()).join("_");
+    case "pascalCase":
+      return words
+        .map(
+          (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+        )
+        .join("");
+    default:
+      return str;
   }
-  // camelCase (default)
-  return str
-    .replace(/[-_\s]+(.)?/g, (_, c) => (c ? c.toUpperCase() : ""))
-    .replace(/^[A-Z]/, (c) => c.toLowerCase());
 }

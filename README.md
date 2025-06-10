@@ -138,12 +138,22 @@ const response = await fetch(blogWithFilters.toString());
 
 ### CLI Options
 
-| Option                  | Description                          | Default                    |
-| ----------------------- | ------------------------------------ | -------------------------- |
-| `-d, --appDir <dir>`    | App router root directory            | `src/app`                  |
-| `-e, --env <var>`       | Environment variable for base URL    | `NEXT_PUBLIC_APP_BASE_URL` |
-| `--snake`               | Use snake_case for path keys         | `false`                    |
-| `-o, --outputDir <dir>` | Output directory for generated files | Same as appDir             |
+| Option                    | Description                          | Default                    |
+| ------------------------- | ------------------------------------ | -------------------------- |
+| `-d, --appDir <dir>`      | App router root directory            | `src/app`                  |
+| `-e, --env <var>`         | Environment variable for base URL    | `NEXT_PUBLIC_APP_BASE_URL` |
+| `-c, --caseStyle <style>` | Case style for path keys             | `camelCase`                |
+| `-o, --outputDir <dir>`   | Output directory for generated files | Same as appDir             |
+| `-f, --fileName <name>`   | Output file name (must end with .ts) | `paths.ts`                 |
+
+### Case Styles
+
+The following case styles are supported:
+
+- `camelCase` (default): `blogPost`, `userProfile`
+- `lowerSnake`: `blog_post`, `user_profile`
+- `upperSnake`: `BLOG_POST`, `USER_PROFILE`
+- `pascalCase`: `BlogPost`, `UserProfile`
 
 ### 📝 Example
 
@@ -204,18 +214,28 @@ blogWithDraft.toString(); // "http://localhost:3000/blog?draft=1"
 npx nextjs-paths generate --env NEXT_PUBLIC_SITE_URL
 ```
 
-### Output Directory
+### Output Directory and File Name
 
 ```bash
-# Generate files in custom directory
-npx nextjs-paths generate --outputDir ./generated
+# Generate files in custom directory with custom name
+npx nextjs-paths generate --outputDir ./generated --fileName routes.ts
 ```
 
 ### Case Style
 
 ```bash
-# Use snake_case instead of camelCase
-npx nextjs-paths generate --snake
+# Use different case styles
+npx nextjs-paths generate --caseStyle lowerSnake  # blog_post
+npx nextjs-paths generate --caseStyle upperSnake  # BLOG_POST
+npx nextjs-paths generate --caseStyle pascalCase  # BlogPost
+npx nextjs-paths generate --caseStyle camelCase   # blogPost (default)
+```
+
+### App Directory
+
+```bash
+# Generate from custom app directory
+npx nextjs-paths generate --appDir ./app
 ```
 
 ## 🛠️ Development

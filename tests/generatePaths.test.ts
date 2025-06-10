@@ -20,7 +20,7 @@ describe("generatePaths", () => {
     generatePaths({
       appDir,
       envKey: "NEXT_PUBLIC_TEST_URL",
-      style: "camel",
+      caseStyle: "camelCase",
       outputDir,
     });
 
@@ -42,7 +42,7 @@ describe("generatePaths", () => {
     generatePaths({
       appDir,
       envKey: "NEXT_PUBLIC_TEST_URL",
-      style: "snake",
+      caseStyle: "lowerSnake",
       outputDir,
     });
 
@@ -56,7 +56,7 @@ describe("generatePaths", () => {
     generatePaths({
       appDir,
       envKey: "NEXT_PUBLIC_TEST_URL",
-      style: "camel",
+      caseStyle: "camelCase",
       outputDir,
     });
 
@@ -68,7 +68,7 @@ describe("generatePaths", () => {
     generatePaths({
       appDir,
       envKey: "NEXT_PUBLIC_TEST_URL",
-      style: "camel",
+      caseStyle: "camelCase",
       outputDir,
     });
 
@@ -82,7 +82,7 @@ describe("generatePaths", () => {
     generatePaths({
       appDir,
       envKey: "NEXT_PUBLIC_TEST_URL",
-      style: "camel",
+      caseStyle: "camelCase",
       outputDir,
     });
 
@@ -95,7 +95,7 @@ describe("generatePaths", () => {
     generatePaths({
       appDir,
       envKey: "NEXT_PUBLIC_TEST_URL",
-      style: "camel",
+      caseStyle: "camelCase",
       outputDir,
     });
 
@@ -109,7 +109,7 @@ describe("generatePaths", () => {
     generatePaths({
       appDir,
       envKey: "NEXT_PUBLIC_TEST_URL",
-      style: "camel",
+      caseStyle: "camelCase",
       outputDir,
     });
 
